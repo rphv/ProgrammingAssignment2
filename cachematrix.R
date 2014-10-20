@@ -1,10 +1,24 @@
-## Based on material from "R Programming":
+## Programming Assignment 2 from "R Programming":
 ## https://class.coursera.org/rprog-008/
+## Modified from "Example: Caching the Mean of a Vector":
+## https://github.com/rdpeng/ProgrammingAssignment2
 
 ## Creates a "matrix" object that can cache its inverse.
 
 makeCacheMatrix <- function(x = matrix()) {
+	m <- NULL
 
+	set <- function(y) {
+		x <<- y
+		m <<- NULL
+	}
+
+	get <- function() x
+
+	setinv <- function(inv) m <<- inv
+	getinv <- function() m
+
+	list(set = set, get = get, setinv = setinv, getinv = getinv)
 }
 
 
@@ -13,5 +27,17 @@ makeCacheMatrix <- function(x = matrix()) {
 ## then the cachesolve retrieves the inverse from the cache.
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+	m <- x$getinv()
+
+	if(!is.null(m)) {
+		message("getting cached data")
+		return(m)
+	}
+
+	data <- x$get()
+
+	m <- solve(data, ...)
+	x$setinv(m)
+
+	m
 }
